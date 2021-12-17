@@ -1,0 +1,124 @@
+import React, { useState } from 'react';
+import { Form, Select, Input, Upload, Button, Image } from 'antd';
+import { LoadingOutlined, UploadOutlined } from '@ant-design/icons';
+import styles from './style.less';
+
+export default function Mint() {
+  const [state, setState] = useState({ loading: false, imageUrl: '' });
+
+  const handleChange = (info) => {
+    if (info.file.status === 'uploading') {
+      setState((data) => ({ ...data, loading: true }));
+      return;
+    }
+    if (info.file.status === 'done') {
+      // Get this url from response in real world.
+      getBase64(info.file.originFileObj, (imageUrl) =>
+        setState((data) => ({
+          ...data,
+          imageUrl,
+          loading: false,
+        })),
+      );
+    }
+  };
+
+  const { loading, imageUrl } = state;
+  const uploadButton = (
+    <div>
+      <Button
+        size="small"
+        icon={loading ? <LoadingOutlined /> : <UploadOutlined />}
+        style={{ marginTop: 15 }}
+      >
+        Upload
+      </Button>
+    </div>
+  );
+  return (
+    <Form
+      className={styles.mainform}
+      labelAlign="left"
+      labelCol={{ span: 2 }}
+      wrapperCol={{ span: 10 }}
+    >
+      <Form.Item label="公链部署" name="chain" defaultValue="ICP">
+        <Select className={styles.mainSelect}>
+          <Select.Option value="ICP">ICP</Select.Option>
+        </Select>
+        <p style={{ marginTop: '10px', color: '#fff', fontSize: '12px' }}>
+          请选择所要部署的公链，选择确认后，将无法修改
+        </p>
+      </Form.Item>
+
+      <Form.Item label="价格" name="price" initialValue="ICP">
+        <div style={{ display: 'flex' }}>
+          <Input className={styles.mainInput}></Input>
+          <span style={{ margin: '10px', color: '#fff', fontSize: '12px' }}>
+            ICP
+          </span>
+        </div>
+      </Form.Item>
+      <Form.Item label="上传作品">
+        <div style={{ display: 'flex' }}>
+          <div className={styles.img}>
+            {imageUrl ? (
+              <Image src={imageUrl} alt="avatar" />
+            ) : (
+              <img
+                src={require('@/static/img/img-stack@2x.png')}
+                className={styles.imgdefault}
+              />
+            )}
+          </div>
+
+          <div>
+            <p style={{ margin: 0, color: '#fff', fontSize: '12px' }}>
+              请为您的每个NTF的图片进行编号， <br />
+              该编号将被展示给收藏家
+            </p>
+            <Upload
+              name="avatar"
+              className="avatar-uploader"
+              showUploadList={false}
+              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              beforeUpload={beforeUpload}
+              onChange={handleChange}
+            >
+              {uploadButton}
+            </Upload>
+          </div>
+        </div>
+      </Form.Item>
+      <Button
+        size="middle"
+        type="primary"
+        style={{
+          background: '#186FF2',
+          borderRadius: '10px',
+          marginTop: '50px',
+        }}
+      >
+        确认
+      </Button>
+    </Form>
+  );
+}
+
+function getBase64(img, callback) {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result));
+  reader.readAsDataURL(img);
+}
+
+function beforeUpload(file) {
+  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+  if (!isJpgOrPng) {
+    message.error('You can only upload JPG/PNG file!');
+  }
+  const isLt2M = file.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    message.error('Image must smaller than 2MB!');
+  }
+  return isJpgOrPng && isLt2M;
+}
