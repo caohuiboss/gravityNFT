@@ -1,0 +1,59 @@
+.container {
+  height: 100vh;
+  background: url('../../static/img/bg.png') no-repeat;
+  background-size: cover;
+  background-position: center;
+  // background-attachment: fixed;
+  position: relative;
+
+  .content {
+    padding-top: 190px;
+    padding-left: 50px;
+    color: #fff;
+
+    .desc {
+      width: 500px;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .btn {
+      width: 132px;
+      height: 46px;
+      border-radius: 10px;
+      opacity: 1;
+      background: linear-gradient(214deg, rgba(92,186.54,255,1) 0%, rgba(26,94.68,228,1) 100%);
+      display: flex;
+      align-items: center;
+      margin-top: 32px;
+      justify-content: center;
+
+      a {
+        color: #fff;
+        font-size: 18px;
+        font-weight: 400;
+      }
+    }
+  }
+
+  .media_box {
+    position: absolute;
+    right: 20px;
+    bottom: 211px;
+
+    .media {
+      width: 50px;
+      height: 50px;
+      opacity: 1;
+      border: 1px solid rgba(1, 1, 1, 0.10);
+      background: rgba(0,0,0,0.19);
+      box-sizing: border-box;
+      margin-bottom: 10px;
+
+      img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}
