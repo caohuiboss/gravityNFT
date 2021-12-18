@@ -3,7 +3,7 @@ import { Form, Select, Input, Upload, Button, Image } from 'antd';
 import { LoadingOutlined, UploadOutlined } from '@ant-design/icons';
 // import { getToken } from '../../utils/qiniu'
 import styles from './style.less';
-
+import { mint } from '@/utils/icp';
 // 七牛默认的上传地址(即为post接口)
 const QINIU_SERVER = 'http://upload.qiniup.com';
 // bucket绑定的URL
@@ -111,6 +111,7 @@ export default function Mint() {
           borderRadius: '10px',
           marginTop: '50px',
         }}
+        onClick={mint}
       >
         确认
       </Button>

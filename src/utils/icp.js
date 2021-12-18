@@ -8,7 +8,7 @@ import { Principal } from '@dfinity/principal';
 //import { AuthClient } from '@dfinity/auth-client';//dfinity 官方钱包，难用。不用了
 //引入stoic 钱包
 import { StoicIdentity } from 'ic-stoic-identity';
-import { message } from 'antd';
+import { message, Loading } from 'antd';
 const hostUrlEl = 'https://ic0.app';
 const canisterIdstr = '4k2wq-cqaaa-aaaab-qac7q-cai';
 
@@ -44,9 +44,38 @@ export const connectWallet = async () => {
       }
 
       //Lets display the connected principal!
-      console.log(identity.getPrincipal().toText());
+      console.log(identity, identity.getPrincipal().toText());
     })
     .catch((e) => {
       console.log(e);
     });
+};
+
+export const mint = async () => {
+  if (!identity) {
+    identity = await StoicIdentity.connect();
+  }
+  const actor = Actor.createActor(idlFactory, {
+    agent: new HttpAgent({
+      host: hostUrlEl,
+      identity,
+    }),
+    canisterId,
+  });
+  const hide = message.loading('Minting...', 0);
+  try {
+    actor
+      .mint()
+      .then((principal) => {
+        console.log('Return:', principal);
+        hide();
+        message.success('Mint SUCCESS');
+      })
+      .catch(() => {
+        message.error('Mint FAILED');
+      });
+  } catch (e) {
+    hide();
+    message.error('Mint 失败');
+  }
 };

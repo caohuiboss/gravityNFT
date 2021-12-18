@@ -14,7 +14,7 @@ export default function Home() {
           建出项目的官网和智能合约的部署，助力您的NFT项目快速、低成本上线
         </div>
         <div className={styles.btn}>
-          <Link to="/mynft/list">创建项目</Link>
+          <Link to="/nft/mint">创建项目</Link>
         </div>
       </div>
       <div className={styles.media_box}>
