@@ -1,5 +1,9 @@
 import { defineConfig } from 'umi';
 export default defineConfig({
+  outputPath: 'build',
+  publicPath: './',
+  history: { type: 'hash' },
+  hash: true,
   nodeModulesTransform: {
     type: 'none',
   },

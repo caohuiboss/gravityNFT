@@ -12,10 +12,11 @@ export default function Layouts(props) {
   const [walletInfo, setWalletInfo] = useState({});
   let scApp = window.localStorage.getItem('_scApp') || {};
   useEffect(() => {
+    let scappInfo;
     try {
-      scApp = JSON.parse(scApp);
+      scappInfo = JSON.parse(scApp);
     } catch (e) {}
-    setWalletInfo(scApp);
+    setWalletInfo(scappInfo || {});
   }, [scApp]);
   return (
     <Layout className={styles.layout}>
