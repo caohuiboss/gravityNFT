@@ -10,13 +10,15 @@ export default function Layouts(props) {
   } = useHistory();
   const { Header, Footer, Content } = Layout;
   const [walletInfo, setWalletInfo] = useState({});
-  let scApp = window.localStorage.getItem('_scApp') || {};
+  let scApp = window.localStorage.getItem('_scApp');
+
   useEffect(() => {
     let scappInfo;
+    let tempscApp = scApp;
     try {
-      scappInfo = JSON.parse(scApp);
+      scappInfo = JSON.parse(tempscApp);
     } catch (e) {}
-    setWalletInfo(scappInfo || {});
+    setWalletInfo(() => scappInfo || {});
   }, [scApp]);
   return (
     <Layout className={styles.layout}>
