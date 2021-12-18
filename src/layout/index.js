@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'umi';
 import { Layout, Image, Menu, Button } from 'antd';
 import styles from './index.less';
 import { routes } from '@/constant/index';
-
+import { connectWallet } from '@/utils/icp';
 export default function Layouts(props) {
   const {
     location: { pathname },
   } = useHistory();
   const { Header, Footer, Content } = Layout;
-
+  const [walletInfo, setWalletInfo] = useState({});
+  let scApp = window.localStorage.getItem('_scApp') || {};
+  useEffect(() => {
+    try {
+      scApp = JSON.parse(scApp);
+    } catch (e) {}
+    setWalletInfo(scApp);
+  }, [scApp]);
   return (
     <Layout className={styles.layout}>
       <Header className={styles.header}>
@@ -39,8 +46,9 @@ export default function Layouts(props) {
         <Button
           type="primary"
           style={{ background: '#186FF2', borderRadius: '10px' }}
+          onClick={connectWallet}
         >
-          连接钱包
+          {walletInfo.principal ? '已连接' : '连接钱包'}
         </Button>
       </Header>
       <Content>{props.children}</Content>
