@@ -1,10 +1,23 @@
 import React, { useState } from 'react';
 import { Form, Select, Input, Upload, Button, Image } from 'antd';
 import { LoadingOutlined, UploadOutlined } from '@ant-design/icons';
+// import { getToken } from '../../utils/qiniu'
 import styles from './style.less';
+
+// 七牛默认的上传地址(即为post接口)
+const QINIU_SERVER = 'http://upload.qiniup.com';
+// bucket绑定的URL
+const BASE_QINIU_URL = '';
 
 export default function Mint() {
   const [state, setState] = useState({ loading: false, imageUrl: '' });
+  // const [token, setToken] = useState("");
+  // const [fileList, setFileList] = useState([]);
+
+  // const getUploadToken = () => {
+  //   const token = getToken();
+  //   setToken(token);
+  // };
 
   const handleChange = (info) => {
     if (info.file.status === 'uploading') {

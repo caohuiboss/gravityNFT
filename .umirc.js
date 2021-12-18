@@ -1,11 +1,31 @@
 import { defineConfig } from 'umi';
 export default defineConfig({
-    nodeModulesTransform: {
-        type: 'none',
+  nodeModulesTransform: {
+    type: 'none',
+  },
+  routes: [
+    { path: '/', redirect: '/nft/mint' },
+    {
+      path: '/home',
+      component: '@/layout/index',
+      routes: [{ path: '/home/index', component: '@/pages/home/index.js' }],
     },
-    routes: [
-        { path: '/', component: '@/pages/index' },
-    ],
-    fastRefresh: {},
+    {
+      path: '/nft',
+      component: '@/layout/index',
+      routes: [{ path: '/nft/mint', component: '@/pages/nft/mint.js' }],
+    },
+    {
+      path: '/domain',
+      component: '@/layout/index',
+      routes: [{ path: '/domain/mint', component: '@/pages/domain/mint.js' }],
+    },
+    {
+      path: '/mynft',
+      component: '@/layout/index',
+      routes: [{ path: '/mynft/list', component: '@/pages/mynft/list.js' }],
+    },
+  ],
+  fastRefresh: {},
 });
 //# sourceMappingURL=.umirc.js.map
