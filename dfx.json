@@ -1,0 +1,9 @@
+{
+  "canisters": {
+    "gravity": {
+      "main": "src/backend/gravity/Main.mo",
+      "type": "assets",
+      "source": ["dist"]
+    }
+  }
+}
