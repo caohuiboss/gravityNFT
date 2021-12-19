@@ -20,4 +20,4 @@
 /.env.local
 
 # local dfx
-.dfx
+/.dfx
