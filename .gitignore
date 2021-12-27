@@ -8,6 +8,7 @@
 /package-lock.json
 
 
+/dist
 
 # misc
 .DS_Store
@@ -20,3 +21,6 @@
 
 # local dfx
 /.dfx
+
+# rust target
+/target
