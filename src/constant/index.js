@@ -8,6 +8,10 @@ export const routes = [
     path: '/mynft/list',
   },
   {
+    name: '网站编辑',
+    path: '/webedit/mint',
+  },
+  {
     name: 'NFT部署',
     path: '/nft/mint',
   },

@@ -26,6 +26,11 @@ export default defineConfig({
       component: '@/layout/index',
       routes: [{ path: '/mynft/list', component: '@/pages/mynft/list.js' }],
     },
+    {
+      path: '/webedit',
+      component: '@/layout/index',
+      routes: [{ path: '/webedit/mint', component: '@/pages/webedit/mint.js' }],
+    },
   ],
   fastRefresh: {},
 });
