@@ -6,14 +6,16 @@ export default function UploadImage() {
   const handlerImgChange = (e) => {
     e.preventDefault();
     const imgFile = e.target.files[0];
-    // let formData  = new FormData(); //创建form对象
-    // formData.append("imgs", e.target.files[0]);
-    const reader = new FileReader();
+    var reader = new FileReader();
     reader.readAsDataURL(imgFile);
-    reader.onload = function (result) {
-      console.log('result', result);
-      setImgSrc(result);
-    };
+    reader.addEventListener(
+      'load',
+      function () {
+        // console.log('reader.result', reader.result);
+        setImgSrc(reader.result);
+      },
+      false,
+    );
   };
   const handleUploadClick = () => {
     console.log(imgDom);
@@ -24,7 +26,11 @@ export default function UploadImage() {
       <div className="title">导航背景</div>
       <div className="content">
         <div className="temp-image">
-          <img src={require('@/static/img/img-stack.png')} />
+          {ImgSrc ? (
+            <img style={{ width: '100%' }} src={ImgSrc} alt="" />
+          ) : (
+            <img src={require('@/static/img/img-stack.png')} />
+          )}
         </div>
         <div className="right-wrap">
           <div className="upload-info">
