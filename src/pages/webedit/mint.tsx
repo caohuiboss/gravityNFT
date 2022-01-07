@@ -4,8 +4,37 @@ import { useState } from 'react';
 export default function Mint(params) {
   // 编辑区的状态：false 未编辑 true 编辑中
   const [EditAreaStatus, setEditAreaStatus] = useState(false);
-  const handleBrandLogoClick = () => {
+  // 页面布局的数据
+  const [PageInfo, setPageInfo] = useState({});
+  // 当前编辑的模块
+  const [CurEditItem, setCurEditItem] = useState({});
+  const handlePageClick = (type, title) => {
     setEditAreaStatus(true);
+    console.log(type, title);
+    let temp = PageInfo[type]
+      ? PageInfo[type]
+      : (PageInfo[type] = {
+          name: type,
+          title: title,
+        });
+    console.log('temp', temp);
+    setCurEditItem({ ...temp });
+  };
+  const handlePageChange = (data) => {
+    console.log('data', data);
+    let name = CurEditItem.name;
+    switch (name) {
+      case 'brandLogo':
+        CurEditItem.image = data;
+        setPageInfo({ ...PageInfo, brandLogo: CurEditItem });
+        break;
+      case 'navBar':
+        CurEditItem.image = data;
+        setPageInfo({ ...PageInfo, navBar: CurEditItem });
+        break;
+      default:
+        break;
+    }
   };
   return (
     <div className="editweb-wrap">
@@ -14,12 +43,35 @@ export default function Mint(params) {
           <div
             className="brand-logo"
             onClick={() => {
-              handleBrandLogoClick();
+              handlePageClick('brandLogo', '导航品牌logo');
             }}
           >
-            导航品牌logo
+            {PageInfo.brandLogo?.image ? (
+              <img
+                src={PageInfo.brandLogo.image}
+                alt=""
+                style={{ width: '100%' }}
+              />
+            ) : (
+              '导航品牌logo'
+            )}
           </div>
-          <div className="nav-img">导航背景</div>
+          <div
+            className="nav-img"
+            onClick={() => {
+              handlePageClick('navBar', '导航背景');
+            }}
+          >
+            {PageInfo.navBar?.image ? (
+              <img
+                src={PageInfo.navBar.image}
+                alt=""
+                style={{ height: '100%' }}
+              />
+            ) : (
+              <span style={{ lineHeight: '96px' }}>导航背景</span>
+            )}
+          </div>
           <div className="nav-bar">导航栏</div>
           <div className="wallet">
             <div className="wallet-btn">钱包</div>
@@ -50,11 +102,31 @@ export default function Mint(params) {
           </div>
         ) : (
           <div className="editing-area-wrap">
-            <div className="editing-title">导航设置</div>
+            <div className="editing-title">{CurEditItem.title}设置</div>
             <div className="editing-area">
-              <div className="editing-item">
-                <UploadImage />
-              </div>
+              {CurEditItem.name == 'brandLogo' ? (
+                <div className="editing-item">
+                  <UploadImage
+                    title={CurEditItem.title}
+                    image={CurEditItem.image}
+                    onChange={(data) => {
+                      handlePageChange(data);
+                    }}
+                  />
+                </div>
+              ) : CurEditItem.name == 'navBar' ? (
+                <div className="editing-item">
+                  <UploadImage
+                    title={CurEditItem.title}
+                    image={CurEditItem.image}
+                    onChange={(data) => {
+                      handlePageChange(data);
+                    }}
+                  />
+                </div>
+              ) : (
+                ''
+              )}
             </div>
           </div>
         )}

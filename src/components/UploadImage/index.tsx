@@ -1,29 +1,35 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import './index.less';
-export default function UploadImage() {
+export default function UploadImage(props) {
+  const { image, onChange, title } = props;
   const imgDom = useRef(null);
   const [ImgSrc, setImgSrc] = useState(null);
   const handlerImgChange = (e) => {
     e.preventDefault();
     const imgFile = e.target.files[0];
-    var reader = new FileReader();
-    reader.readAsDataURL(imgFile);
-    reader.addEventListener(
-      'load',
-      function () {
-        // console.log('reader.result', reader.result);
-        setImgSrc(reader.result);
-      },
-      false,
-    );
+    if (imgFile) {
+      var reader = new FileReader();
+      reader.readAsDataURL(imgFile);
+      reader.addEventListener(
+        'load',
+        function () {
+          setImgSrc(reader.result);
+          onChange && onChange(reader.result);
+        },
+        false,
+      );
+    }
   };
   const handleUploadClick = () => {
     console.log(imgDom);
     imgDom.current.click();
   };
+  useEffect(() => {
+    setImgSrc(image);
+  }, [image]);
   return (
     <div className="upload-image-wrap">
-      <div className="title">导航背景</div>
+      <div className="title">{title}图片</div>
       <div className="content">
         <div className="temp-image">
           {ImgSrc ? (
