@@ -29,7 +29,9 @@ export default defineConfig({
     {
       path: '/webedit',
       component: '@/layout/index',
-      routes: [{ path: '/webedit/mint', component: '@/pages/webedit/mint.js' }],
+      routes: [
+        { path: '/webedit/mint', component: '@/pages/webedit/mint.tsx' },
+      ],
     },
   ],
   fastRefresh: {},
