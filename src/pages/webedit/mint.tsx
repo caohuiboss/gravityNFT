@@ -1,5 +1,6 @@
 import './style.less';
 import UploadImage from '@/components/UploadImage/index.tsx';
+import NavBarEdit from '@/components/NavBarEdit/index.tsx';
 import { useState } from 'react';
 export default function Mint(params) {
   // 编辑区的状态：false 未编辑 true 编辑中
@@ -72,7 +73,13 @@ export default function Mint(params) {
                 导航背景
               </span>
             )}
-            <div className="nav-bar" onClick={() => {}}>
+            <div
+              className="nav-bar"
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePageClick('navBar', '导航栏');
+              }}
+            >
               导航栏
             </div>
           </div>
@@ -137,6 +144,10 @@ export default function Mint(params) {
                     }}
                   />
                 </div>
+              ) : CurEditItem.name == 'navBar' ? (
+                <div className="editing-item">
+                  <NavBarEdit />
+                </div>
               ) : CurEditItem.name == 'wallet' ? (
                 <>
                   <div className="editing-item">
@@ -158,16 +169,6 @@ export default function Mint(params) {
                     />
                   </div>
                 </>
-              ) : CurEditItem.name == 'navBar' ? (
-                <div className="editing-item">
-                  <UploadImage
-                    title={CurEditItem.title}
-                    image={CurEditItem.image}
-                    onChange={(data) => {
-                      handlePageChange(data);
-                    }}
-                  />
-                </div>
               ) : (
                 ''
               )}
