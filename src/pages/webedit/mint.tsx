@@ -18,6 +18,7 @@ export default function Mint(params) {
           name: type,
           title: title,
         });
+    console.log('temp', temp);
     setCurEditItem({ ...temp });
   };
   const handlePageChange = (data) => {
@@ -31,6 +32,14 @@ export default function Mint(params) {
       case 'navBarImage':
         CurEditItem.image = data;
         setPageInfo({ ...PageInfo, navBarImage: CurEditItem });
+        break;
+      case 'navBar':
+        CurEditItem.navBarsList = data;
+        console.log('CurEditItem', CurEditItem);
+        setPageInfo({ ...PageInfo, navBar: CurEditItem });
+        setTimeout(() => {
+          console.log('PageInfo---PageInfo', PageInfo);
+        }, 200);
         break;
       default:
         break;
@@ -73,15 +82,33 @@ export default function Mint(params) {
                 导航背景
               </span>
             )}
-            <div
-              className="nav-bar"
-              onClick={(e) => {
-                e.stopPropagation();
-                handlePageClick('navBar', '导航栏');
-              }}
-            >
-              导航栏
-            </div>
+            {PageInfo.navBar &&
+            PageInfo.navBar.navBarsList != undefined &&
+            PageInfo.navBar.navBarsList[0].image ? (
+              PageInfo.navBar.navBarsList.map((item) => {
+                return (
+                  <div
+                    className="nav-bar"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePageClick('navBar', '导航栏');
+                    }}
+                  >
+                    <img style={{ width: '100%' }} src={item.image} alt="" />
+                  </div>
+                );
+              })
+            ) : (
+              <div
+                className="nav-bar"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePageClick('navBar', '导航栏');
+                }}
+              >
+                导航栏
+              </div>
+            )}
           </div>
           <div
             className="wallet"
@@ -146,7 +173,12 @@ export default function Mint(params) {
                 </div>
               ) : CurEditItem.name == 'navBar' ? (
                 <div className="editing-item">
-                  <NavBarEdit />
+                  <NavBarEdit
+                    navBarsList={CurEditItem.navBarsList}
+                    onChange={(data) => {
+                      handlePageChange(data);
+                    }}
+                  />
                 </div>
               ) : CurEditItem.name == 'wallet' ? (
                 <>
