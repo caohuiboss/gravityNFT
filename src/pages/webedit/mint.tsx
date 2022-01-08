@@ -1,6 +1,7 @@
 import './style.less';
 import UploadImage from '@/components/UploadImage/index.tsx';
 import NavBarEdit from '@/components/NavBarEdit/index.tsx';
+import SuspendedPos from '@/components/SuspendedPos/index.tsx';
 import { useState } from 'react';
 export default function Mint(params) {
   // 编辑区的状态：false 未编辑 true 编辑中
@@ -45,6 +46,10 @@ export default function Mint(params) {
       case 'mainPage':
         CurEditItem.image = data;
         setPageInfo({ ...PageInfo, mainPage: CurEditItem });
+        break;
+      case 'suspendedPos':
+        CurEditItem.suspendedPosList = data;
+        setPageInfo({ ...PageInfo, suspendedPos: CurEditItem });
         break;
       default:
         break;
@@ -150,7 +155,42 @@ export default function Mint(params) {
           ) : (
             <span className="title">主页面</span>
           )}
-          <div className="suspended-pos">悬浮位</div>
+          <div className="suspended-pos-wrap">
+            {PageInfo.suspendedPos &&
+            PageInfo.suspendedPos.suspendedPosList != undefined &&
+            PageInfo.suspendedPos.suspendedPosList[0].image ? (
+              PageInfo.suspendedPos.suspendedPosList.map((item) => {
+                return (
+                  <div
+                    className="suspended-pos"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePageClick('suspendedPos', '悬浮位');
+                    }}
+                  >
+                    <img
+                      src={item.image}
+                      style={{
+                        height: '100%',
+                        width: '100%',
+                        display: 'block',
+                      }}
+                    />
+                  </div>
+                );
+              })
+            ) : (
+              <div
+                className="suspended-pos"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePageClick('suspendedPos', '悬浮位');
+                }}
+              >
+                悬浮位
+              </div>
+            )}
+          </div>
         </div>
         <div className="common-page">
           <span className="title">页面1</span>
@@ -227,6 +267,15 @@ export default function Mint(params) {
                   <UploadImage
                     title="主页面"
                     image={CurEditItem.image}
+                    onChange={(data) => {
+                      handlePageChange(data);
+                    }}
+                  />
+                </div>
+              ) : CurEditItem.name == 'suspendedPos' ? (
+                <div className="editing-item">
+                  <SuspendedPos
+                    suspendedPosList={CurEditItem.suspendedPosList}
                     onChange={(data) => {
                       handlePageChange(data);
                     }}
