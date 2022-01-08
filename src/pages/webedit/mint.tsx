@@ -17,7 +17,6 @@ export default function Mint(params) {
           name: type,
           title: title,
         });
-    console.log('temp', temp);
     setCurEditItem({ ...temp });
   };
   const handlePageChange = (data) => {
@@ -28,9 +27,9 @@ export default function Mint(params) {
         CurEditItem.image = data;
         setPageInfo({ ...PageInfo, brandLogo: CurEditItem });
         break;
-      case 'navBar':
+      case 'navBarImage':
         CurEditItem.image = data;
-        setPageInfo({ ...PageInfo, navBar: CurEditItem });
+        setPageInfo({ ...PageInfo, navBarImage: CurEditItem });
         break;
       default:
         break;
@@ -59,25 +58,39 @@ export default function Mint(params) {
           <div
             className="nav-img"
             onClick={() => {
-              handlePageClick('navBar', '导航背景');
+              handlePageClick('navBarImage', '导航背景');
             }}
           >
-            {PageInfo.navBar?.image ? (
+            {PageInfo.navBarImage?.image ? (
               <img
-                src={PageInfo.navBar.image}
+                src={PageInfo.navBarImage.image}
                 alt=""
                 style={{ height: '100%' }}
               />
             ) : (
-              <span style={{ lineHeight: '96px' }}>导航背景</span>
+              <span className="navBarTitle" style={{ lineHeight: '96px' }}>
+                导航背景
+              </span>
             )}
+            <div className="nav-bar" onClick={() => {}}>
+              导航栏
+            </div>
           </div>
-          <div className="nav-bar">导航栏</div>
-          <div className="wallet">
+          <div
+            className="wallet"
+            onClick={() => {
+              handlePageClick('wallet', '钱包');
+            }}
+          >
             <div className="wallet-btn">钱包</div>
           </div>
         </div>
-        <div className="main-page">
+        <div
+          className="main-page"
+          onClick={() => {
+            handlePageClick('mainPage', '主页面');
+          }}
+        >
           <div className="buy-btn-wrap">
             <div className="buy-btn">购买按钮</div>
           </div>
@@ -114,6 +127,37 @@ export default function Mint(params) {
                     }}
                   />
                 </div>
+              ) : CurEditItem.name == 'navBarImage' ? (
+                <div className="editing-item">
+                  <UploadImage
+                    title={CurEditItem.title}
+                    image={CurEditItem.image}
+                    onChange={(data) => {
+                      handlePageChange(data);
+                    }}
+                  />
+                </div>
+              ) : CurEditItem.name == 'wallet' ? (
+                <>
+                  <div className="editing-item">
+                    <UploadImage
+                      title="钱包（未登录状态）"
+                      image={CurEditItem.image}
+                      onChange={(data) => {
+                        handlePageChange(data);
+                      }}
+                    />
+                  </div>
+                  <div className="editing-item">
+                    <UploadImage
+                      title="钱包（已登录状态）"
+                      image={CurEditItem.image}
+                      onChange={(data) => {
+                        handlePageChange(data);
+                      }}
+                    />
+                  </div>
+                </>
               ) : CurEditItem.name == 'navBar' ? (
                 <div className="editing-item">
                   <UploadImage
