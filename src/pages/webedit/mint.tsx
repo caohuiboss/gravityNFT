@@ -21,7 +21,7 @@ export default function Mint(params) {
     console.log('temp', temp);
     setCurEditItem({ ...temp });
   };
-  const handlePageChange = (data) => {
+  const handlePageChange = (data, keyOfValue) => {
     console.log('data', data);
     let name = CurEditItem.name;
     switch (name) {
@@ -37,9 +37,14 @@ export default function Mint(params) {
         CurEditItem.navBarsList = data;
         console.log('CurEditItem', CurEditItem);
         setPageInfo({ ...PageInfo, navBar: CurEditItem });
-        setTimeout(() => {
-          console.log('PageInfo---PageInfo', PageInfo);
-        }, 200);
+        break;
+      case 'wallet':
+        CurEditItem[keyOfValue] = data;
+        setPageInfo({ ...PageInfo, wallet: CurEditItem });
+        break;
+      case 'mainPage':
+        CurEditItem.image = data;
+        setPageInfo({ ...PageInfo, mainPage: CurEditItem });
         break;
       default:
         break;
@@ -116,7 +121,15 @@ export default function Mint(params) {
               handlePageClick('wallet', '钱包');
             }}
           >
-            <div className="wallet-btn">钱包</div>
+            {PageInfo.wallet?.notLoginImg ? (
+              <img
+                src={PageInfo.wallet.notLoginImg}
+                alt=""
+                style={{ width: '100%' }}
+              />
+            ) : (
+              <div className="wallet-btn">钱包</div>
+            )}
           </div>
         </div>
         <div
@@ -128,7 +141,15 @@ export default function Mint(params) {
           <div className="buy-btn-wrap">
             <div className="buy-btn">购买按钮</div>
           </div>
-          <span className="title">主页面</span>
+          {PageInfo.mainPage?.image ? (
+            <img
+              src={PageInfo.mainPage.image}
+              alt=""
+              style={{ height: '100%' }}
+            />
+          ) : (
+            <span className="title">主页面</span>
+          )}
           <div className="suspended-pos">悬浮位</div>
         </div>
         <div className="common-page">
@@ -185,22 +206,32 @@ export default function Mint(params) {
                   <div className="editing-item">
                     <UploadImage
                       title="钱包（未登录状态）"
-                      image={CurEditItem.image}
+                      image={CurEditItem.notLoginImg}
                       onChange={(data) => {
-                        handlePageChange(data);
+                        handlePageChange(data, 'notLoginImg');
                       }}
                     />
                   </div>
                   <div className="editing-item">
                     <UploadImage
                       title="钱包（已登录状态）"
-                      image={CurEditItem.image}
+                      image={CurEditItem.loginImg}
                       onChange={(data) => {
-                        handlePageChange(data);
+                        handlePageChange(data, 'loginImg');
                       }}
                     />
                   </div>
                 </>
+              ) : CurEditItem.name == 'mainPage' ? (
+                <div className="editing-item">
+                  <UploadImage
+                    title="主页面"
+                    image={CurEditItem.image}
+                    onChange={(data) => {
+                      handlePageChange(data);
+                    }}
+                  />
+                </div>
               ) : (
                 ''
               )}
