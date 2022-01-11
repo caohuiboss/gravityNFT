@@ -7,23 +7,29 @@ export default function Mint(params) {
   // 编辑区的状态：false 未编辑 true 编辑中
   const [EditAreaStatus, setEditAreaStatus] = useState(false);
   // 页面布局的数据
-  const [PageInfo, setPageInfo] = useState({});
+  const [PageInfo, setPageInfo] = useState({ CommonPageList: [{}] });
   // 当前编辑的模块
   const [CurEditItem, setCurEditItem] = useState({});
-  const handlePageClick = (type, title) => {
+  const handlePageClick = (type, title, index) => {
     setEditAreaStatus(true);
     console.log(type, title);
-    let temp = PageInfo[type]
-      ? PageInfo[type]
-      : (PageInfo[type] = {
-          name: type,
-          title: title,
-        });
+    let temp;
+    if (type == 'commonPage') {
+      temp = PageInfo['CommonPageList'][index];
+      temp = { ...temp, name: type, title: title, index: index };
+    } else {
+      temp = PageInfo[type]
+        ? PageInfo[type]
+        : (PageInfo[type] = {
+            name: type,
+            title: title,
+            index: index,
+          });
+    }
     console.log('temp', temp);
     setCurEditItem({ ...temp });
   };
   const handlePageChange = (data, keyOfValue) => {
-    console.log('data', data);
     let name = CurEditItem.name;
     switch (name) {
       case 'brandLogo':
@@ -51,9 +57,22 @@ export default function Mint(params) {
         CurEditItem.suspendedPosList = data;
         setPageInfo({ ...PageInfo, suspendedPos: CurEditItem });
         break;
+      case 'commonPage':
+        CurEditItem.image = data;
+        console.log('PageInfo', PageInfo);
+        let list = PageInfo.CommonPageList;
+        list[CurEditItem.index] = { ...CurEditItem };
+        setPageInfo({ ...PageInfo, CommonPageList: list });
+        break;
       default:
         break;
     }
+  };
+  const handleAddPageClick = () => {
+    setPageInfo({
+      ...PageInfo,
+      CommonPageList: [...PageInfo.CommonPageList, {}],
+    });
   };
   return (
     <div className="editweb-wrap">
@@ -192,11 +211,34 @@ export default function Mint(params) {
             )}
           </div>
         </div>
-        <div className="common-page">
-          <span className="title">页面1</span>
-        </div>
+        {PageInfo.CommonPageList?.length &&
+          PageInfo.CommonPageList.map((item, index) => {
+            return (
+              <div
+                className="common-page"
+                onClick={() => {
+                  console.log('index', index);
+                  handlePageClick('commonPage', `页面${index + 1}`, index);
+                }}
+              >
+                {item?.image ? (
+                  <img
+                    src={item.image}
+                    style={{ width: '100%', height: '100%', display: 'block' }}
+                  />
+                ) : (
+                  <span className="title">{`页面${index + 1}`}</span>
+                )}
+              </div>
+            );
+          })}
         <div className="add-page-wrap">
-          <div className="add-page-item">
+          <div
+            className="add-page-item"
+            onClick={() => {
+              handleAddPageClick();
+            }}
+          >
             <img src={require('@/static/img/s-add.png')} />
             <span style={{ marginLeft: 4 }}>添加页面</span>
           </div>
@@ -278,6 +320,16 @@ export default function Mint(params) {
                     suspendedPosList={CurEditItem.suspendedPosList}
                     onChange={(data) => {
                       handlePageChange(data);
+                    }}
+                  />
+                </div>
+              ) : CurEditItem.name == 'commonPage' ? (
+                <div className="editing-item">
+                  <UploadImage
+                    title={CurEditItem.title}
+                    image={CurEditItem.image}
+                    onChange={(data) => {
+                      handlePageChange(data, 'commonPage');
                     }}
                   />
                 </div>
