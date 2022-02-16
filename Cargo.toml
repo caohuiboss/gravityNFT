@@ -1,2 +1,10 @@
 [workspace]
-members = ["src/backend/nft"]
+members = ["src/backend/nft", "src/backend/common"]
+
+[profile.release]
+lto = true
+opt-level = 'z'
+overflow-checks = true
+
+[profile.bench]
+overflow-checks = true

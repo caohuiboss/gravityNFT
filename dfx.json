@@ -1,8 +1,8 @@
 {
   "canisters": {
-    "backend": {
+    "gravity_nft": {
       "build": "cargo build --target wasm32-unknown-unknown --release --package nft",
-      "candid": "backend/nft/candid/nft.did",
+      "candid": "src/backend/nft/candid/nft.did",
       "wasm": "target/wasm32-unknown-unknown/release/nft.wasm",
       "type": "custom"
     },
@@ -15,18 +15,15 @@
       "type": "assets"
     }
   },
-  "defaults": {
-    "build": {
-      "args": "",
-      "packtool": ""
-    }
-  },
   "dfx": "0.8.4",
   "networks": {
     "local": {
       "bind": "127.0.0.1:8000",
       "type": "ephemeral"
     }
+  },
+  "ic": {
+    "bind": "ic0.app"
   },
   "version": 1
 }

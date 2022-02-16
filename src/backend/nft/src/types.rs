@@ -1,5 +1,4 @@
 use crate::ledger::Ledger;
-use crate::management::Fleek;
 use common::account_identifier::AccountIdentifierStruct;
 
 use derive_new::*;
@@ -10,7 +9,6 @@ use serde::Deserialize;
 use serde::Serialize;
 use std::collections::VecDeque;
 
-use cap_sdk::DetailValue;
 use cap_sdk::IndefiniteEvent;
 use cap_std::dip721::DIP721TransactionType;
 
@@ -22,7 +20,7 @@ pub type Balance = Nat;
 pub type Memo = Vec<u8>;
 pub type SubAccount = Vec<u8>;
 pub type TokenIdentifier = String;
-pub type TokenIndex = u32;
+pub type TokenIndex = u64;
 pub type AccountIdentifier = String;
 pub type Date = u64;
 pub type TransactionId = Nat;
@@ -196,7 +194,7 @@ impl From<AccountIdentifier> for User {
 
 pub fn into_token_index(token_identifier: &TokenIdentifier) -> TokenIndex {
     token_identifier
-        .parse::<u32>()
+        .parse::<u64>()
         .expect("unable to convert token identifier to token index")
 }
 
@@ -314,14 +312,6 @@ pub struct TransactionsRequest {
     token: TokenIdentifier,
 }
 
-fn _get_detail_value(key: &str, details: Vec<(String, DetailValue)>) -> Option<DetailValue> {
-    let entry = details.iter().find(|&x| x.0.as_str() == key);
-    match entry {
-        Some(x) => Some(x.1.clone()),
-        None => None,
-    }
-}
-
 #[derive(Default)]
 pub struct TxLog {
     pub tx_records: VecDeque<IndefiniteEvent>,
@@ -331,12 +321,10 @@ pub struct TxLog {
 pub struct StableStorageBorrowed<'a> {
     pub ledger: &'a Ledger,
     pub token: &'a TokenLevelMetadata,
-    pub fleek: &'a Fleek,
 }
 
 #[derive(CandidType, Deserialize)]
 pub struct StableStorage {
     pub ledger: Ledger,
     pub token: TokenLevelMetadata,
-    pub fleek: Fleek,
 }
