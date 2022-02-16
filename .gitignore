@@ -24,3 +24,6 @@
 
 # rust target
 /target
+
+/@dfinity/agent/node_modules
+/@dfinity/candid/node_modules
