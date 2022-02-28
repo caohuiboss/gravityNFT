@@ -1,5 +1,9 @@
 #!/bin/bash
 
+WORK_PATH=`pwd`/src/backend
+
+echo "work: "$WORK_PATH
+
 if [ -d ./.dfx/local/canisters/nft ] && [[ ! SKIP_PROMPTS -eq 1 ]];
 then
   printf "🚩 The process seem to have run before, it's probably best to reset the state and only after run the healthcheck, please!\n\n"  
@@ -16,11 +20,13 @@ then
   fi
 fi
 
-TEMP_DIR="./.temp"
+TEMP_DIR="$WORK_PATH/.temp"
 
 printf "🙏 Verifying the Cap Service status, please wait...\n\n"
 
 CAP_ROUTER_ID_PATH="$TEMP_DIR/ic-history-router-id"
+
+echo "dir: $CAP_ROUTER_ID_PATH"
 
 if [ ! -e "$CAP_ROUTER_ID_PATH" ];
 then

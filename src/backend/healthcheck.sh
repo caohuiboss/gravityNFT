@@ -4,7 +4,7 @@ source "${BASH_SOURCE%/*}/.scripts/required.sh"
 source "${BASH_SOURCE%/*}/.scripts/dfx-identity.sh"
 
 dfxDir="$HOME/.config/dfx"
-NftCandidFile="./nft/candid/nft.did"
+NftCandidFile="./src/backend/nft/candid/nft.did"
 
 NftID=""
 
@@ -21,17 +21,20 @@ IcxPrologueNft="--candid=${NftCandidFile}"
 deploy() {
   printf "🤖 Deploying the NFT Canister\n"
 
-  dfx deploy --no-wallet nft --argument "(principal \"$DFX_IDENTITY_PRINCIPAL\", \"tkn\", \"token\", principal \"$CANISTER_CAP_ID\")"
+  echo "DFX_IDENTITY_PRINCIPAL: $DFX_IDENTITY_PRINCIPAL"
+  echo "CANISTER_CAP_ID: $CANISTER_CAP_ID"
+
+  dfx deploy --no-wallet gravity_nft --argument "(principal \"$DFX_IDENTITY_PRINCIPAL\", \"tkn\", \"token\", principal \"$CANISTER_CAP_ID\")"
 
   dfx canister --no-wallet \
   call aaaaa-aa \
   update_settings "(
     record { 
-      canister_id=principal \"$(dfx canister id nft)\";
+      canister_id=principal \"$(dfx canister id gravity_nft)\";
       settings=record {
         controllers=opt vec{
           principal\"$(dfx identity get-principal)\";
-          principal\"$(dfx canister id nft)\";
+          principal\"$(dfx canister id gravity_nft)\";
         }
       }
     }
@@ -47,7 +50,7 @@ init() {
 
   DefaultPem="$HOME/.config/dfx/identity/default/identity.pem"
 
-  NftID=$(dfx canister id nft)
+  NftID=$(dfx canister id gravity_nft)
 
   AlicePrincipalId=$ALICE_PRINCIPAL_ID
   BobPrincipalId=$BOB_PRINCIPAL_ID
