@@ -12,7 +12,7 @@
     "cap:start": "cd ./src/backend/cap && dfx deploy ic-history-router && mkdir -p ../.temp && dfx canister id ic-history-router > ../.temp/ic-history-router-id",
     "dip721:healthcheck": "./src/backend//healthcheck.sh",
     "reset": "dfx stop && rm -rf .dfx && rm -rf ./cap/.dfx && rm -rf ./.temp",
-    "dev:watch": "cargo watch -w .src/backend/nft/src -s 'yarn reset && dfx start --background && yes Y | SKIP_PROMPTS=1 yarn dip721:healthcheck'"
+    "dev:watch": "cargo watch -w ./src/backend/nft/src -s 'yarn reset && dfx start --background && yes Y | SKIP_PROMPTS=1 yarn dip721:healthcheck'"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
