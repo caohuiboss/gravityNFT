@@ -9,6 +9,7 @@ import { Principal } from '@dfinity/principal';
 //引入stoic 钱包
 import { StoicIdentity } from 'ic-stoic-identity';
 import { message, Loading } from 'antd';
+import fleekStorage from '@fleekhq/fleek-storage-js';
 const hostUrlEl = 'https://ic0.app';
 const canisterIdstr = '4k2wq-cqaaa-aaaab-qac7q-cai';
 
@@ -79,4 +80,27 @@ export const mint = async () => {
     console.log(e);
     message.error('Mint 失败');
   }
+};
+
+export const uploadedFile = async (fileData) => {
+  await fleekStorage.upload({
+    apiKey: 'q4VweULidjYuWLLaYTkBkA==',
+    apiSecret: 'SAgcpgf2mVeGnrVOMrXiKySZJMWNcrseWOGv1a0Ghvo=',
+    key: 'my-file-key' + '-' + 1,
+    ContentType: 'image/png',
+    data: fileData,
+    httpUploadProgressCallback: (event) => {
+      console.log(Math.round((event.loaded / event.total) * 100) + '% done');
+    },
+  });
+};
+
+export const getFile = async () => {
+  const myFile = await fleekStorage.get({
+    apiKey: 'q4VweULidjYuWLLaYTkBkA==',
+    apiSecret: 'SAgcpgf2mVeGnrVOMrXiKySZJMWNcrseWOGv1a0Ghvo=',
+    key: 'my-file-key' + '-' + 1,
+    getOptions: ['data'],
+  });
+  console.log('myFile', myFile);
 };

@@ -3,14 +3,33 @@ import { Form, Select, Input, Upload, Button, Image } from 'antd';
 import { LoadingOutlined, UploadOutlined } from '@ant-design/icons';
 // import { getToken } from '../../utils/qiniu'
 import styles from './style.less';
-import { mint } from '@/utils/icp';
+import { mint, uploadedFile, getFile } from '@/utils/icp';
 // 七牛默认的上传地址(即为post接口)
 const QINIU_SERVER = 'http://upload.qiniup.com';
 // bucket绑定的URL
 const BASE_QINIU_URL = '';
 
 export default function Mint() {
+  function getBase64(img, callback) {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+  }
+
+  function beforeUpload(file) {
+    setNFTImg(file);
+    getBase64(file, (imageUrl) =>
+      setState((data) => ({
+        ...data,
+        imageUrl,
+        loading: false,
+      })),
+    );
+    // return isJpgOrPng && isLt2M;
+    return false;
+  }
   const [state, setState] = useState({ loading: false, imageUrl: '' });
+  const [NFTImg, setNFTImg] = useState();
   // const [token, setToken] = useState("");
   // const [fileList, setFileList] = useState([]);
 
@@ -20,11 +39,13 @@ export default function Mint() {
   // };
 
   const handleChange = (info) => {
+    console.log('handleChange');
     if (info.file.status === 'uploading') {
       setState((data) => ({ ...data, loading: true }));
       return;
     }
     if (info.file.status === 'done') {
+      console.log('info.file', info.file);
       // Get this url from response in real world.
       getBase64(info.file.originFileObj, (imageUrl) =>
         setState((data) => ({
@@ -94,9 +115,9 @@ export default function Mint() {
               name="avatar"
               className="avatar-uploader"
               showUploadList={false}
-              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
               beforeUpload={beforeUpload}
-              onChange={handleChange}
+              // onChange={handleChange}
             >
               {uploadButton}
             </Upload>
@@ -111,28 +132,25 @@ export default function Mint() {
           borderRadius: '10px',
           marginTop: '50px',
         }}
-        onClick={mint}
+        // onClick={mint}
+        onClick={() => {
+          console.log('NFTImg', NFTImg);
+          getBase64(NFTImg, (imageUrl) => {
+            // console.log('imageUrl', imageUrl);
+            uploadedFile(imageUrl);
+          });
+          // uploadedFile();
+        }}
       >
         确认
       </Button>
+      <Button
+        onClick={() => {
+          getFile();
+        }}
+      >
+        获取
+      </Button>
     </Form>
   );
-}
-
-function getBase64(img, callback) {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
-
-function beforeUpload(file) {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-  if (!isJpgOrPng) {
-    message.error('You can only upload JPG/PNG file!');
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error('Image must smaller than 2MB!');
-  }
-  return isJpgOrPng && isLt2M;
 }
