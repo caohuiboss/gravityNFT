@@ -76,6 +76,7 @@ export const mint = async () => {
       });
   } catch (e) {
     hide();
+    console.log(e);
     message.error('Mint 失败');
   }
 };
